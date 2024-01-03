@@ -1,6 +1,6 @@
 const formularioLogin = (req , res) =>{
     res.render('auth/login',{
-        autenticado: false
+        pagina: 'Iniciar Sesión'
     }) 
 }
 
@@ -10,9 +10,16 @@ const formularioRegistro = (req , res) =>{
     }) 
 }
 
+const formularioOlvidePassword = (req , res) =>{
+    res.render('auth/olvide-password',{
+        pagina: 'Recupera tu acceso a bienes raices'
+    }) 
+}
+
 //varios export
 //export default; //solo uno por archivo
 export {
     formularioLogin,
-    formularioRegistro
+    formularioRegistro,
+    formularioOlvidePassword
 }
