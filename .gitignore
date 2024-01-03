@@ -1,0 +1,24 @@
+# Módulos de Node.js
+node_modules/
+
+# Archivos de configuración
+*.env
+
+# Archivos generados durante la construcción
+/build/
+/dist/
+
+# Logs y archivos temporales
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependiendo del entorno de desarrollo, puedes querer ignorar ciertos archivos
+# Por ejemplo, ignorar archivos generados por IDEs
+.vscode/
+.idea/
+
+# Archivos de respaldo
+*~
+*.bak
