@@ -3,9 +3,18 @@
 
 import express from 'express'; //con ems module
 import usuarioRoutes from './routes/usuarioRoutes.js' //Importo el routing
+import db from './config/db.js';
 
 //Crear la app
 const app = express();
+
+//Conexion a la base de datos
+try {
+  await db.authenticate();
+  console.log('Conexión correcta a la base de datos')
+} catch (error) {
+  console.log(error)
+}
 
 //Routing y Middleware
 app.use('/auth',usuarioRoutes); //aqui ya trae todas las rutas con use
