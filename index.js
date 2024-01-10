@@ -8,9 +8,13 @@ import db from './config/db.js'
 //Crear la app
 const app = express()
 
+//Habilitar lectura de datos del formuluraio
+app.use(express.urlencoded({ extended: true }))
+
 //Conexion a la base de datos
 try {
   await db.authenticate()
+  db.sync() //crea la bd si no existe
   console.log('Conexión correcta a la base de datos')
 } catch (error) {
   console.log(error)
