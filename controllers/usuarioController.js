@@ -36,7 +36,7 @@ const registrar = async (req, res) => {
     .withMessage('El password debe ser de al menos 6 caracteres')
     .run(req)
 
-  await check('repetir_password')
+    await check('repetir_password')
     .equals('password')
     .withMessage('Los passwords deben ser iguales')
     .run(req)
@@ -53,10 +53,7 @@ const registrar = async (req, res) => {
         email: req.body.email
       }
     })
-  }
-
-  res.json()
-
+  }  
   const usuario = await Usuario.create(req.body)
 
   res.json(usuario)
