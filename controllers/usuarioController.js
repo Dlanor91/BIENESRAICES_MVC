@@ -37,7 +37,7 @@ const registrar = async (req, res) => {
     .run(req)
 
     await check('repetir_password')
-    .equals('password')
+    .equals(req.body.password)
     .withMessage('Los passwords deben ser iguales')
     .run(req)
 
