@@ -1,5 +1,6 @@
 import { check, validationResult } from 'express-validator'
 import Usuario from '../models/Usuario.js'
+import { generarId } from '../helpers/tokens.js'
 
 const formularioLogin = (req, res) => {
   res.render('auth/login', {
@@ -14,7 +15,6 @@ const formularioRegistro = (req, res) => {
 }
 
 const registrar = async (req, res) => {
-  
   //validacion
   await check('nombre')
     .notEmpty()
@@ -36,7 +36,7 @@ const registrar = async (req, res) => {
     .withMessage('El password debe ser de al menos 6 caracteres')
     .run(req)
 
-    await check('repetir_password')
+  await check('repetir_password')
     .equals(req.body.password)
     .withMessage('Los passwords deben ser iguales')
     .run(req)
@@ -48,30 +48,35 @@ const registrar = async (req, res) => {
     return res.render('auth/registro', {
       pagina: 'Crear Cuenta',
       errores: resultado.array(),
-      usuario:{
+      usuario: {
         nombre: req.body.nombre,
-        email: req.body.email
-      }
-    })
-  } 
-  
-  //Extrar los datos
-  const{nombre, email, password} = req.body;
-
-  //Verificar que el usuario no este duplicado
-  const existeUsuario = await Usuario.findOne({where:{email: email}})
-  if(existeUsuario){
-    return res.render('auth/registro', {
-      pagina: 'Crear Cuenta',
-      errores: [{msg: 'El usuario ya esta registrado'}],
-      usuario:{
-        nombre: req.body.nombre,
-        email: req.body.email
-      }
+        email: req.body.email,
+      },
     })
   }
-    
-   return;
+
+  //Extrar los datos
+  const { nombre, email, password } = req.body
+
+  //Verificar que el usuario no este duplicado
+  const existeUsuario = await Usuario.findOne({ where: { email: email } })
+  if (existeUsuario) {
+    return res.render('auth/registro', {
+      pagina: 'Crear Cuenta',
+      errores: [{ msg: 'El usuario ya esta registrado' }],
+      usuario: {
+        nombre: req.body.nombre,
+        email: req.body.email,
+      },
+    })
+  }
+
+  await Usuario.create({
+    nombre,
+    email,
+    password,
+    token: generarId(),
+  })
 }
 
 const formularioOlvidePassword = (req, res) => {
