@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 //Habilitar CSRF
-app.use(csrf({cookie: true}))
+app.use(csrf({ cookie: true }))
 
 //Conexion a la base de datos
 try {

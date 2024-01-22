@@ -12,7 +12,7 @@ const formularioLogin = (req, res) => {
 const formularioRegistro = (req, res) => {
   res.render('auth/registro', {
     pagina: 'Crear Cuenta',
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
   })
 }
 
@@ -128,7 +128,40 @@ const confirmar = async (req, res) => {
 const formularioOlvidePassword = (req, res) => {
   res.render('auth/olvide-password', {
     pagina: 'Recupera tu acceso a bienes raices',
+    csrfToken: req.csrfToken(),
   })
+}
+
+const resetPassword = async (req, res) => {
+  //validacion
+  await check('email')
+    .notEmpty()
+    .withMessage('El email no puede ir vacío')
+    .run(req)
+
+  let resultado = validationResult(req)
+
+  //Verificar que el resultado no este vacío, o sea hay errores
+  if (!resultado.isEmpty()) {
+    return res.render('auth/olvide-password', {
+      pagina: 'Recupera tu acceso a bienes raices',
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    })
+  }
+
+  //Buscar el usuario
+  const { email } = req.body
+
+  const usuario = await Usuario.findOne({ where: { email } })
+
+  if (!usuario) {
+    return res.render('auth/olvide-password', {
+      pagina: 'Recupera tu acceso a bienes raices',
+      csrfToken: req.csrfToken(),
+      errores: [{ msg: 'El email no pertenece a ningún usuario' }],
+    })
+  }
 }
 
 //varios export
@@ -139,4 +172,5 @@ export {
   formularioOlvidePassword,
   confirmar,
   registrar,
+  resetPassword,
 }
