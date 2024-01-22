@@ -2,6 +2,8 @@
 //const express = require("express"); con common js
 
 import express from 'express' //con ems module
+import csrf from 'csurf'
+import cookieParser from 'cookie-parser'
 import usuarioRoutes from './routes/usuarioRoutes.js' //Importo el routing
 import db from './config/db.js'
 
@@ -10,6 +12,12 @@ const app = express()
 
 //Habilitar lectura de datos del formuluraio
 app.use(express.urlencoded({ extended: true }))
+
+//Habilitar Cookie Parser
+app.use(cookieParser())
+
+//Habilitar CSRF
+app.use(csrf({cookie: true}))
 
 //Conexion a la base de datos
 try {
