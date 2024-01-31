@@ -2,6 +2,7 @@ import { check, validationResult } from 'express-validator'
 import Usuario from '../models/Usuario.js'
 import { generarId } from '../helpers/tokens.js'
 import { emailRegistro, emailOlvidePassword } from '../helpers/emails.js'
+import bcrypt from 'bcrypt'
 
 const formularioLogin = (req, res) => {
   res.render('auth/login', {
@@ -201,8 +202,41 @@ const comprobarToken = async (req, res) => {
   })
 }
 
-const nuevoPassword = (req, res) => {
-  console.log('GG')
+const nuevoPassword = async (req, res) => {
+  //Validar Password
+  await check('password')
+    .isLength({ min: 6 })
+    .withMessage('El password debe ser de al menos 6 caracteres')
+    .run(req)
+
+  let resultado = validationResult(req)
+
+  //Verificar que el resultado no este vacío, o sea hay errores
+  if (!resultado.isEmpty()) {
+    return res.render('auth/reset-password', {
+      pagina: 'Restablece tu Password',
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    })
+  }
+
+  const { token } = req.params
+  const { password } = req.body
+
+  //Identificar quien hace el cambio
+  const usuario = await Usuario.findOne({ where: { token } })
+
+  //Hashear el password
+  const salt = await bcrypt.genSalt(10) //rondas de hash
+  usuario.password = await bcrypt.hash(password, salt)
+  usuario.token = null
+
+  await usuario.save()
+
+  res.render('auth/confirmar-cuenta', {
+    pagina: 'Password reestablecido',
+    mensaje: 'El password se guardo correctamente',
+  })
 }
 //varios export
 //export default; //solo uno por archivo
