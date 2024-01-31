@@ -7,7 +7,29 @@ import bcrypt from 'bcrypt'
 const formularioLogin = (req, res) => {
   res.render('auth/login', {
     pagina: 'Iniciar Sesión',
+    csrfToken: req.csrfToken(),
   })
+}
+
+const autenticar = async (req, res) => {
+  //Validación
+  await check('email').isEmail().withMessage('El email es obligatorio').run(req)
+
+  await check('password')
+    .notEmpty()
+    .withMessage('El Password es obligatorio')
+    .run(req)
+
+  let resultado = validationResult(req)
+
+  //Verificar que el resultado no este vacío, o sea hay errores
+  if (!resultado.isEmpty()) {
+    return res.render('auth/login', {
+      pagina: 'Iniciar Sesión',
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    })
+  }
 }
 
 const formularioRegistro = (req, res) => {
@@ -242,6 +264,7 @@ const nuevoPassword = async (req, res) => {
 //export default; //solo uno por archivo
 export {
   formularioLogin,
+  autenticar,
   formularioRegistro,
   formularioOlvidePassword,
   confirmar,
