@@ -4,7 +4,8 @@
 import express from 'express' //con ems module
 import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
-import usuarioRoutes from './routes/usuarioRoutes.js' //Importo el routing
+import usuarioRoutes from './routes/usuarioRoutes.js' //Importo el routing de usuarios
+import propiedadesRoutes from './routes/propiedadesRoutes.js' //Importo el routing de propiedades
 import db from './config/db.js'
 
 //Crear la app
@@ -28,15 +29,16 @@ try {
   console.log(error)
 }
 
-//Routing y Middleware
-app.use('/auth', usuarioRoutes) //aqui ya trae todas las rutas con use
-
 //Habilitar Pug
 app.set('view engine', 'pug')
 app.set('views', './views')
 
 //Carpeta Pública
 app.use(express.static('public'))
+
+//Routing y Middleware
+app.use('/auth', usuarioRoutes) //aqui ya trae todas las rutas que use para usuarios
+app.use('/', propiedadesRoutes) //aqui ya trae todas las rutas que use para
 
 //Deginir el puerto y arrancar el proyecto
 const port = process.env.PORT || 3000
