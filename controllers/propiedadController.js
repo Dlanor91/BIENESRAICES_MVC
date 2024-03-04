@@ -5,4 +5,11 @@ const admin = (req, res) => {
   })
 }
 
-export { admin }
+const crear = (req, res) => {
+  res.render('propiedades/crear', {
+    pagina: 'Crear propiedad',
+    barra: true,
+  })
+}
+
+export { admin, crear }
