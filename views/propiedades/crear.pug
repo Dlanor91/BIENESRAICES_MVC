@@ -24,6 +24,14 @@ block contenido
                     placeholder="Título Propiedad, ej. Casa en la Playa",
                     name="titulo"
                     ) 
+                
+                div
+                    label(class ="block text-sm uppercase text-gray-500 mb-3 font-bold"
+                    for="descripcion"
+                    ) Descripción
+                    textarea#descripcion.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(                    
+                    placeholder="Descripción de la propiedad", name="descripcion"
+                    ) 
 
                 div(class="md:flex md:gap-4 space-5 md:space-y-0")
                 
