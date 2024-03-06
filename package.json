@@ -11,7 +11,8 @@
     "format": "prettier --write \"**/*.js\"",
     "js": "webpack --watch",
     "dev": "concurrently \"npm run css\" \"npm run js\"",
-    "db:importar": "node ./seed/seeder.js -i"
+    "db:importar": "node ./seed/seeder.js -i",
+    "db:eliminar": "node ./seed/seeder.js -e"
   },
   "keywords": [
     "MVC",
