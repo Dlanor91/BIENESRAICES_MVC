@@ -100,14 +100,14 @@ const agregarImagen = async (req, res) => {
   }
 
   //Validar que la propiedad pertenece al que visita la pagina y lo llevo a string para mejorar el CRM
-  if( req.usuario.id.toString() !== propiedad.usuarioId.toString()){
+  if (req.usuario.id.toString() !== propiedad.usuarioId.toString()) {
     return res.redirect('/mis-propiedades')
   }
 
   res.render('propiedades/agregar-imagen', {
     pagina: `Agregar Imagen ${propiedad.titulo}`,
     csrfToken: req.csrfToken(),
-    propiedad
+    propiedad,
   })
 }
 
