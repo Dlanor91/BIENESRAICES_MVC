@@ -1,6 +1,6 @@
 ;(function () {
-  const lat = -34.915668
-  const lng = -56.1620156
+  const lat = document.querySelector('#lat').value || -34.915668
+  const lng = document.querySelector('#lng').value || -56.1620156
   const mapa = L.map('mapa').setView([lat, lng], 14)
   let marker
 
@@ -19,8 +19,8 @@
   }).addTo(mapa)
 
   //Detectar el movimiento del pin
-  marker.on('moveend', function (event) {
-    marker = event.target
+  marker.on('moveend', function (e) {
+    marker = e.target
 
     const posicion = marker.getLatLng()
 
@@ -36,12 +36,10 @@
         //Llenar los campos
         document.querySelector('.calle').textContent =
           resultado?.address?.Address ?? ''
-        document.querySelector('#calle').textCvalueontent =
+        document.querySelector('#calle').value =
           resultado?.address?.Address ?? ''
-        document.querySelector('#lat').textCvalueontent =
-          resultado?.latlng?.lat ?? ''
-        document.querySelector('#lng').textCvalueontent =
-          resultado?.latlng?.lng ?? ''
+        document.querySelector('#lat').value = resultado?.latlng?.lat ?? ''
+        document.querySelector('#lng').value = resultado?.latlng?.lng ?? ''
       })
   })
 })()
