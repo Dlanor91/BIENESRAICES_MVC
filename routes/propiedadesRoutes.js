@@ -6,9 +6,10 @@ import protegerRuta from '../middleware/protegerRuta.js'
 const router = express.Router()
 
 router.get('/mis-propiedades', protegerRuta, admin) //url, luego middleware y luego function
-router.get('/propiedades/crear',protegerRuta, crear)
+router.get('/propiedades/crear', protegerRuta, crear)
 router.post(
-  '/propiedades/crear', protegerRuta,
+  '/propiedades/crear',
+  protegerRuta,
   body('titulo').notEmpty().withMessage('El título del anuncio es obligatorio'),
   body('descripcion')
     .notEmpty()
