@@ -11,7 +11,7 @@ import db from './config/db.js'
 //Crear la app
 const app = express()
 
-//Habilitar lectura de datos del formuluraio
+//Habilitar lectura de datos del formulario pero no archivos
 app.use(express.urlencoded({ extended: true }))
 
 //Habilitar Cookie Parser
