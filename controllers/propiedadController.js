@@ -1,5 +1,6 @@
 import { validationResult } from 'express-validator'
 import { Categoria, Precio, Propiedad } from '../models/index.js'
+import e from 'express'
 
 const admin = (req, res) => {
   res.render('propiedades/admin', {
@@ -111,4 +112,37 @@ const agregarImagen = async (req, res) => {
   })
 }
 
-export { admin, crear, guardar, agregarImagen }
+const almacenarImagen = async (req, res, next) => {
+  const { id } = req.params //viene en la url en el parametro
+
+  //Valdiar que la propiedade exista
+  const propiedad = await Propiedad.findByPk(id)
+
+  if (!propiedad) {
+    return res.redirect('/mis-propiedades')
+  }
+
+  //Validar que no este publicada
+  if (propiedad.publicado) {
+    return res.redirect('/mis-propiedades')
+  }
+
+  //Validar que la propiedad pertenece al que visita la pagina y lo llevo a string para mejorar el CRM
+  if (req.usuario.id.toString() !== propiedad.usuarioId.toString()) {
+    return res.redirect('/mis-propiedades')
+  }
+
+  try {
+    //Almacenar la imagen y publicar propiedad
+    propiedad.imagen = req.file.filename
+    propiedad.publicado = 1
+
+    await propiedad.save()
+
+    next()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { admin, crear, guardar, agregarImagen, almacenarImagen }

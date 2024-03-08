@@ -19,4 +19,20 @@ Dropzone.options.imagen = {
     'CSRF-TOKEN': token,
   },
   paramName: 'imagen',
+  init: function () {
+    //sobreescribo el comportamiento de dropzone
+    const dropzone = this
+    const btnPublicar = document.querySelector('#publicar')
+
+    btnPublicar.addEventListener('click', function () {
+      dropzone.processQueue()
+    })
+
+    //Este evento detecta que todo se ejecuto correctamente y que redireccione si no quedan archivos en cola
+    dropzone.on('queuecomplete', function () {
+      if (dropzone.getActiveFiles().length == 0) {
+        window.location.href = '/mis-propiedades'
+      }
+    }) //eventos de dropzone
+  },
 }

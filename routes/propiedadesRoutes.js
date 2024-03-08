@@ -5,6 +5,7 @@ import {
   crear,
   guardar,
   agregarImagen,
+  almacenarImagen,
 } from '../controllers/propiedadController.js'
 import protegerRuta from '../middleware/protegerRuta.js'
 import upload from '../middleware/subirImagen.js'
@@ -36,8 +37,11 @@ router.post(
 )
 
 router.get('/propiedades/agregar-imagen/:id', protegerRuta, agregarImagen)
-router.post('/propiedades/agregar-imagen/:id', 
-  upload.single('imagen')//solo una imagen y se usa como middleware  
+router.post(
+  '/propiedades/agregar-imagen/:id',
+  protegerRuta,
+  upload.single('imagen'), //solo una imagen y se usa como middleware
+  almacenarImagen,
 )
 
 export default router
