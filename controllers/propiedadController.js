@@ -158,4 +158,109 @@ const almacenarImagen = async (req, res, next) => {
   }
 }
 
-export { admin, crear, guardar, agregarImagen, almacenarImagen }
+const editar = async (req, res) =>{
+
+  const { id } = req.params
+
+  //Validar que la propiedad exista
+  const propiedad = await Propiedad.findByPk(id)
+
+  if(!propiedad)
+  {
+    return res.redirect('/mis-propiedades')
+  }
+
+  //Revisar que quie nvisita la URL es quien creo la propiedad
+  if(propiedad.usuarioId.toString() !== req.usuario.id.toString())
+  {
+    return res.redirect('/mis-propiedades')
+  }
+
+  const [categorias, precios] = await Promise.all([
+    Categoria.findAll(),
+    Precio.findAll(),
+  ])
+
+  res.render('propiedades/editar', {
+    pagina: `Editar Propiedad: ${propiedad.titulo} `,
+    csrfToken: req.csrfToken(),
+    categorias,
+    precios,
+    datos: propiedad,
+  })
+}
+
+const guardarCambios = async (req, res) =>{
+
+  let resultado = validationResult(req)
+
+  if (!resultado.isEmpty()) {
+    const [categorias, precios] = await Promise.all([
+      Categoria.findAll(),
+      Precio.findAll(),
+    ])
+
+    return res.render('propiedades/editar', {
+      pagina: 'Editar Propiedad',
+      csrfToken: req.csrfToken(),
+      categorias,
+      precios,
+      errores: resultado.array(),
+      datos: req.body,
+    })
+  }
+
+  const { id } = req.params
+
+  //Validar que la propiedad exista
+  const propiedad = await Propiedad.findByPk(id)
+
+  if(!propiedad)
+  {
+    return res.redirect('/mis-propiedades')
+  }
+
+  //Revisar que quie nvisita la URL es quien creo la propiedad
+  if(propiedad.usuarioId.toString() !== req.usuario.id.toString())
+  {
+    return res.redirect('/mis-propiedades')
+  }
+
+  //Reescribir el objeto y actualizarlo
+  try {
+    const {
+      titulo,
+      descripcion,
+      habitaciones,
+      estacionamiento,
+      wc,
+      calle,
+      lat,
+      lng,
+      precio: precioId,
+      categoria: categoriaId,
+    } = req.body
+
+    propiedad.set({ //permite setear el nuevo objeto que extraje
+      titulo,
+      descripcion,
+      habitaciones,
+      estacionamiento,
+      wc,
+      categoriaId,
+      precioId,
+      calle,
+      lat,
+      lng
+    })
+
+    await propiedad.save() //salva el valor nuevo en bd
+    res.redirect('/mis-propiedades')
+
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+export { admin, crear, guardar, agregarImagen, almacenarImagen, editar, guardarCambios }
