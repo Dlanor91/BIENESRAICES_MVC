@@ -5,7 +5,10 @@ import {
   crear,
   guardar,
   agregarImagen,
-  almacenarImagen, editar, guardarCambios
+  almacenarImagen,
+  editar,
+  guardarCambios,
+  eliminar,
 } from '../controllers/propiedadController.js'
 import protegerRuta from '../middleware/protegerRuta.js'
 import upload from '../middleware/subirImagen.js'
@@ -44,8 +47,7 @@ router.post(
   almacenarImagen,
 )
 
-router.get('/propiedades/editar/:id', protegerRuta, editar, 
-)
+router.get('/propiedades/editar/:id', protegerRuta, editar)
 
 router.post(
   '/propiedades/editar/:id',
@@ -68,5 +70,7 @@ router.post(
   body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa.'),
   guardarCambios,
 )
+
+router.post('/propiedades/eliminar/:id', protegerRuta, eliminar)
 
 export default router
