@@ -14,14 +14,23 @@ const importarDatos = async () => {
     //Generar las columnas antes de insertarlas
     await db.sync()
 
-    //Insertar todos los datos, al ser mas de 1 se recomienda un promise si no dependen uno de otro, ambos inician al mismo tiempo
-    await Promise.all([
-      Categoria.bulkCreate(categorias),
-      Precio.bulkCreate(precios),
-      Usuario.bulkCreate(usuarios),
-    ])
+    //Verificar si no tienen datos ya las tablas
+    const countCategorias = await Categoria.count()
+    const countPrecios = await Precio.count()
+    const countUsuarios = await Usuario.count()
 
-    console.log('Datos importados correctamente')
+    //Insertar todos los datos, al ser mas de 1 se recomienda un promise si no dependen uno de otro, ambos inician al mismo tiempo
+    if (countCategorias <= 0 && countPrecios <= 0 && countUsuarios <= 0) {
+      await Promise.all([
+        Categoria.bulkCreate(categorias),
+        Precio.bulkCreate(precios),
+        Usuario.bulkCreate(usuarios),
+      ])
+
+      console.log('Datos importados correctamente')
+    } else {
+      console.log('Ya los datos habian sido importados')
+    }
 
     exit() //exit en 0 es que termina todo correctamente y sin errores
   } catch (error) {
