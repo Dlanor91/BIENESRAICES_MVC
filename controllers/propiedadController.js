@@ -13,6 +13,10 @@ const admin = async (req, res) => {
       { model: Categoria, as: 'categoria' }, //aqui traigo los valores de SQL como un join
       { model: Precio, as: 'precio' },
     ],
+    order: [
+      [{ model: Categoria, as: 'categoria' }, 'nombre', 'ASC'],   
+      [{ model: Precio, as: 'precio' }, 'id', 'ASC'],     
+    ],
   })
 
   res.render('propiedades/admin', {
