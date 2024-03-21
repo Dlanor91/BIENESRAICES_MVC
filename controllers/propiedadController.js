@@ -6,7 +6,7 @@ const admin = async (req, res) => {
   //Leer QueryString
   const { pagina: paginaActual } = req.query
 
-  const expresion = /^[0-9]$/ //expresion regular que valida si es un digito
+  const expresion = /^[1-9]$/ //expresion regular que valida si es un digito
 
   if (!expresion.test(paginaActual)) {
     //este test devuelve true o false cuando le pasas la expresion regular
@@ -48,7 +48,7 @@ const admin = async (req, res) => {
       propiedades,
       csrfToken: req.csrfToken(),
       paginas: Math.ceil(total / limit),
-      paginaActual,
+      paginaActual: Number(paginaActual),
       total,
       offset,
       limit,
