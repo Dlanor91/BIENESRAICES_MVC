@@ -28,9 +28,13 @@
       //Agregar los pines
       const marker = new L.marker([propiedad?.lat, propiedad?.lng], {
         autoPan: true,
-      })
-        .addTo(mapa)
-        .bindPopup('')
+      }).addTo(mapa).bindPopup(`
+        <p class="text-indigo-600 font-bold">${propiedad?.categoria.nombre}</p>
+         <h2 class="text-xl font-extrabold uppercase my-5">${propiedad?.titulo}</h2>
+         <img src="/uploads/${propiedad?.imagen}" alt="${propiedad?.titulo}" class="rounded">
+         <p class="text-gray-600 font-bold">${propiedad?.precio.nombre}</p>
+         <a href="/propiedades/${propiedad.id}" class="bg-indigo-600 block p-2 text-center font-bold uppercase">Ver Propiedad</a>
+         `)
 
       markers.addLayer(marker)
     })
