@@ -6,6 +6,7 @@ import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
 import usuarioRoutes from './routes/usuarioRoutes.js' //Importo el routing de usuarios
 import propiedadesRoutes from './routes/propiedadesRoutes.js' //Importo el routing de propiedades
+import appRoutes from './routes/appRoutes.js'
 import db from './config/db.js'
 
 //Crear la app
@@ -37,6 +38,7 @@ app.set('views', './views')
 app.use(express.static('public'))
 
 //Routing y Middleware
+app.use('/', appRoutes)
 app.use('/auth', usuarioRoutes) //aqui ya trae todas las rutas que use para usuarios
 app.use('/', propiedadesRoutes) //aqui ya trae todas las rutas que use para
 
