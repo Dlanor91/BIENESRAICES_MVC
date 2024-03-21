@@ -3,27 +3,47 @@ import { validationResult } from 'express-validator'
 import { Categoria, Precio, Propiedad } from '../models/index.js'
 
 const admin = async (req, res) => {
-  const { id } = req.usuario
+  //Leer QueryString
+  const { pagina: paginaActual } = req.query
 
-  const propiedades = await Propiedad.findAll({
-    where: {
-      usuarioId: id,
-    },
-    include: [
-      { model: Categoria, as: 'categoria' }, //aqui traigo los valores de SQL como un join
-      { model: Precio, as: 'precio' },
-    ],
-    order: [
-      [{ model: Categoria, as: 'categoria' }, 'nombre', 'ASC'],   
-      [{ model: Precio, as: 'precio' }, 'id', 'ASC'],     
-    ],
-  })
+  const expresion = /^[0-9]$/ //expresion regular que valida si es un digito
 
-  res.render('propiedades/admin', {
-    pagina: 'Mis propiedades',
-    propiedades,
-    csrfToken: req.csrfToken(),
-  })
+  if (!expresion.test(paginaActual)) {
+    //este test devuelve true o false cuando le pasas la expresion regular
+    return res.redirect('/mis-propiedades?pagina=1')
+  }
+
+  try {
+    const { id } = req.usuario
+
+    //Limites y offset para el paginador
+    const limit = 4
+    const offset = paginaActual * limit - limit
+
+    const propiedades = await Propiedad.findAll({
+      limit, //como el limite de sql
+      offset,
+      where: {
+        usuarioId: id,
+      },
+      include: [
+        { model: Categoria, as: 'categoria' }, //aqui traigo los valores de SQL como un join
+        { model: Precio, as: 'precio' },
+      ],
+      order: [
+        [{ model: Categoria, as: 'categoria' }, 'nombre', 'ASC'],
+        [{ model: Precio, as: 'precio' }, 'id', 'ASC'],
+      ],
+    })
+
+    res.render('propiedades/admin', {
+      pagina: 'Mis propiedades',
+      propiedades,
+      csrfToken: req.csrfToken(),
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const crear = async (req, res) => {
